@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+  paul-postgres:
+    build:
+      context: ./docker/postgres
+      dockerfile: Dockerfile
+    ports:
+      - '5432:5432'
+    environment:
+      TZ: Europe/Berlin
+      POSTGRES_PASSWORD: 'Paul2.0'
+      POSTGRES_DB: paul
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - default
+  paul-pgadmin4:
+    image: dpage/pgadmin4
+    ports:
+      - '8888:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'dev@evelan.de'
+      PGADMIN_DEFAULT_PASSWORD: 'Paul2.0'
+    networks:
+      - default
+    restart: always
+    depends_on:
+      - paul-postgres
+volumes:
+  postgres-data:

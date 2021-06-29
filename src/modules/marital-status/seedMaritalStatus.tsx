@@ -1,0 +1,58 @@
+import { MaritalStatus } from '@prisma/client';
+
+export const maritalStatus: MaritalStatus[] = [
+  {
+    id: 1,
+    name: 'keine Angabe',
+    active: false,
+    createdAt: new Date('01.07.2019'),
+    updatedBy: 1,
+    updatedAt: new Date('01.07.2019'),
+    createdBy: 1,
+  },
+  {
+    id: 2,
+    name: 'ledig',
+    active: false,
+    createdAt: new Date('01.07.2019'),
+    updatedBy: 1,
+    updatedAt: new Date('01.07.2019'),
+    createdBy: 1,
+  },
+  {
+    id: 3,
+    name: 'verheiratet',
+    active: true,
+    createdAt: new Date('01.07.2019'),
+    updatedBy: 1,
+    updatedAt: new Date('01.07.2019'),
+    createdBy: 1,
+  },
+  {
+    id: 4,
+    name: 'verwitwet',
+    active: false,
+    createdAt: new Date('01.07.2019'),
+    updatedBy: 1,
+    updatedAt: new Date('01.07.2019'),
+    createdBy: 1,
+  },
+  {
+    id: 5,
+    name: 'geschieden',
+    active: true,
+    createdAt: new Date('01.07.2019'),
+    updatedBy: 1,
+    updatedAt: new Date('01.07.2019'),
+    createdBy: 1,
+  },
+  {
+    id: 6,
+    name: 'dauernd getrennt lebend',
+    active: true,
+    createdAt: new Date('01.07.2019'),
+    updatedBy: 1,
+    updatedAt: new Date('01.07.2019'),
+    createdBy: 1,
+  },
+];

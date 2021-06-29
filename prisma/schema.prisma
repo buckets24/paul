@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Salutation {
+  HERR
+  FRAU
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  USER
+}
+
+model User {
+  id                     Int            @id @default(autoincrement())
+  personalNumber         String?        @unique @map(name: "personal_number")
+  salutation             Salutation?
+  title                  String?
+  firstName              String         @map(name: "first_name")
+  lastName               String         @map(name: "last_name")
+  username               String?        @unique
+  image                  String?
+  active                 Boolean        @default(true)
+  role                   Role
+  company                String?
+  phone                  String?
+  mobile                 String?
+  email                  String         @unique
+  position               String?
+  password               String?
+  createdAt              DateTime       @default(now()) @map(name: "created_at")
+  updatedAt              DateTime       @updatedAt @map(name: "updated_at")
+  maritalStatusCreatedBy MaritalStatus? @relation("MaritalStatusCreatedBy")
+  maritalStatusUpdatedBy MaritalStatus? @relation("MaritalStatusUpdatedBy")
+  taxOfficeCreatedBy     TaxOffice?     @relation("TaxOfficeCreatedBy")
+  taxOfficeUpdatedBy     TaxOffice?     @relation("TaxOfficeUpdatedBy")
+
+  @@map(name: "users")
+}
+
+model Account {
+  id                 Int       @id @default(autoincrement())
+  compoundId         String    @unique @map(name: "compound_id")
+  userId             Int       @map(name: "user_id")
+  providerType       String    @map(name: "provider_type")
+  providerId         String    @map(name: "provider_id")
+  providerAccountId  String    @map(name: "provider_account_id")
+  refreshToken       String?   @map(name: "refresh_token")
+  accessToken        String?   @map(name: "access_token")
+  accessTokenExpires DateTime? @map(name: "access_token_expires")
+  createdAt          DateTime  @default(now()) @map(name: "created_at")
+  updatedAt          DateTime  @default(now()) @map(name: "updated_at")
+
+
+  @@index([providerAccountId], name: "providerAccountId")
+  @@index([providerId], name: "providerId")
+  @@index([userId], name: "userId")
+  @@map(name: "accounts")
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map(name: "user_id")
+  expires      DateTime
+  sessionToken String   @unique @map(name: "session_token")
+  accessToken  String   @unique @map(name: "access_token")
+  createdAt    DateTime @default(now()) @map(name: "created_at")
+  updatedAt    DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "sessions")
+}
+
+model MaritalStatus {
+  id        Int      @id @default(autoincrement())
+  name      String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  updater   User?    @relation("MaritalStatusUpdatedBy", fields: [updatedBy], references: [id])
+  updatedBy Int?     @map(name: "updated_by")
+  creator   User?    @relation("MaritalStatusCreatedBy", fields: [createdBy], references: [id])
+  createdBy Int?     @map(name: "created_by")
+
+  @@map(name: "marital_status")
+}
+
+model TaxOffice {
+  id            Int      @id @default(autoincrement())
+  name          String
+  address       String?
+  postcode      Int?
+  place         String?
+  poBox         String?  @map(name: "po_box")
+  postcodePoBox String?  @map(name: "postcode_po_box")
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map(name: "created_at")
+  updatedAt     DateTime @updatedAt @map(name: "updated_at")
+  updater       User?    @relation("TaxOfficeUpdatedBy", fields: [updatedBy], references: [id])
+  updatedBy     Int?     @map(name: "updated_by")
+  creator       User?    @relation("TaxOfficeCreatedBy", fields: [createdBy], references: [id])
+  createdBy     Int?     @map(name: "created_by")
+
+  @@map(name: "tax_offices")
+}
